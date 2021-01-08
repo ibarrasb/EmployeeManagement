@@ -73,7 +73,6 @@ inquirer
 
             case "Update Employee":
             upEmployee();
-            promptUser();
             break;
 
             case "Exit":
@@ -217,5 +216,8 @@ function addDept(){
         }
       );
     });
+}
+//updates employee information
+function upEmployee(){
 
 }
