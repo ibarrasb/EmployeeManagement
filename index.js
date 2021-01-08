@@ -1,3 +1,4 @@
+require('dotenv').config();
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 const consoleTable = require("console.table");
@@ -30,7 +31,7 @@ inquirer
              "View All Roles",
              "Add Employee",
              "Add Department",
-             "Add roles",
+             "Add Roles",
              "Update Employee",
              "Exit"
             ]
@@ -57,9 +58,23 @@ inquirer
             promptUser();
             break;
 
-            case "Remove Employees":
-            removeEmployee();
+            case "Add Roles":
+            addRole();
             promptUser();
+            break;
+
+            case "Add Department":
+            addDept();
+            promptUser();
+            break;
+
+            case "Update Employee":
+            upEmployee();
+            promptUser();
+            break;
+
+            case "Exit":
+            connection.end();
             break;
         }
     })
@@ -78,46 +93,6 @@ function showEmployees(){
 }
 
 function byDept(){
-
-    // inquirer.prompt([
-    //     {
-    //         name: "dept",
-    //         type: "list",
-    //         message: "Which department would you like to view? ",
-    //         choices: 
-    //         ["IT",
-    //          "Production",
-    //          "Engineering",
-    //          "Accounting",
-    //          "Sales"
-    //         ]
-    //     }
-    // ]).then(function(ans){
-
-    //     switch(ans.dept){
-
-    //         case 'IT':
-
-    //         break;
-
-    //         case 'Production':
-
-    //         break;
-
-    //         case 'Engineering':
-                
-    //         break;
-
-    //         case 'Accounting':
-                
-    //         break;
-
-    //         case 'Sales':
-                
-    //         break;
-    //     }
-    // })
-
     connection.query(
         "SELECT department.name, employee.first_name, employee.last_name, employee.role_id FROM employee INNER JOIN department ON department.id = employee.id INNER JOIN role ON role.id = employee.id",
         function (err, res) {
@@ -125,10 +100,30 @@ function byDept(){
           console.table(res);
         }
       );
-    
+}
+
+function byRole(){
+    connection.query(
+        " ",
+        function (err, res) {
+          if (err) throw err;
+          console.table(res);
+        }
+      );
+}
+
+function addEmployee(){
+    connection.query(
+        " ",
+        function (err, res) {
+          if (err) throw err;
+          console.table(res);
+        }
+      );
 
 }
-function byRole(){
+
+function addRole(){
     connection.query(
         " ",
         function (err, res) {
