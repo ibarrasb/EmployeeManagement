@@ -84,7 +84,6 @@ inquirer
 function showEmployees(){
     connection.query("SELECT employee.first_name, employee.last_name, role.title FROM role INNER JOIN employee ON employee.role_id = role.id", function(err, res) {
         if (err) throw err;
-
         console.log("=========================")
         console.table(res)
     })
@@ -113,23 +112,102 @@ function byRole(){
 }
 
 function addEmployee(){
-    connection.query(
-        " ",
+    inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "fName",
+        message: "Enter employee first name: ",
+      },
+      {
+        type: "input",
+        name: "lName",
+        message: "Enter last name: ",
+      },
+      {
+        type: "input",
+        name: "rid",
+        message: "Enter role ID: ",
+      },
+      {
+        type: "input",
+        name: "mid",
+        message: "Enter manager ID: ",
+      },
+    ])
+    .then(function (answer) {
+      connection.query(
+        "INSERT INTO employee SET ?",
+        {
+          first_name: answer.fName,
+          last_name: answer.lName,
+          role_id: answer.rid,
+          manager_id: answer.mid,
+        },
         function (err, res) {
           if (err) throw err;
           console.table(res);
+    
         }
       );
-
+    });
 }
 
 function addRole(){
-    connection.query(
-        " ",
+    inquirer
+    .prompt(
+        {
+      name: "title",
+      type: "input",
+      message: "What is the title name?",
+    },
+    {
+        name: "salary",
+        type: "input",
+        message: "What will be the salary?"
+    },
+    {
+        name: "id",
+        type: "input",
+        message: "What will be the department ID?"
+    }
+    ).then(function(ans){
+        connection.query(
+            "INSERT INTO roles SET ?",
+            {
+              title: answer.title,
+              salary: answer.salary,
+              department_id: answer.deptID,
+            },
+    
+            function (err, res) {
+              if (err) throw err;
+              console.table(res);
+            }
+        );
+    });
+}
+
+function addDept(){
+    inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "dept",
+        message: "What is the name of the department?",
+      },
+    ])
+    .then(function (answer) {
+      connection.query(
+        "INSERT INTO department SET ?",
+        {
+          name: answer.dept,
+        },
         function (err, res) {
           if (err) throw err;
           console.table(res);
         }
       );
+    });
 
 }
