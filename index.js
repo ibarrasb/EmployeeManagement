@@ -1,9 +1,10 @@
-require('dotenv').config();
+
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 const consoleTable = require("console.table");
 const { prototype } = require("inquirer/lib/objects/choice");
 
+//Creates connection to mySQL DB using local host
 var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
@@ -11,12 +12,15 @@ var connection = mysql.createConnection({
     password: "",
     database: "Employee_Management_db"
   });
+
+  //once there is a connection, starts program
   connection.connect(function(err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId + "\n");
     promptUser();
   });
 
+//asks user what they would like to do
 function promptUser(){
 inquirer
     .prompt([
@@ -37,6 +41,8 @@ inquirer
             ]
         }
     ]).then(function(ans){
+
+        //takes reponse, and executes what they want to do
         switch(ans.res){
             case "View All Employees":
             showEmployees();
@@ -53,19 +59,16 @@ inquirer
             promptUser();
             break;
 
-            case "Add Employees":
+            case "Add Employee":
             addEmployee();
-            promptUser();
             break;
 
             case "Add Roles":
             addRole();
-            promptUser();
             break;
 
             case "Add Department":
             addDept();
-            promptUser();
             break;
 
             case "Update Employee":
@@ -81,6 +84,7 @@ inquirer
 
 }
 
+//shows all employees in the db
 function showEmployees(){
     connection.query("SELECT employee.first_name, employee.last_name, role.title FROM role INNER JOIN employee ON employee.role_id = role.id", function(err, res) {
         if (err) throw err;
@@ -90,7 +94,7 @@ function showEmployees(){
 
 
 }
-
+//shows name of all departments
 function byDept(){
     connection.query(
         "SELECT department.name, employee.first_name, employee.last_name, employee.role_id FROM employee INNER JOIN department ON department.id = employee.id INNER JOIN role ON role.id = employee.id",
@@ -100,7 +104,7 @@ function byDept(){
         }
       );
 }
-
+//shows employees by role
 function byRole(){
     connection.query(
         " ",
@@ -111,6 +115,7 @@ function byRole(){
       );
 }
 
+//function to add employee to db
 function addEmployee(){
     inquirer
     .prompt([
@@ -147,12 +152,13 @@ function addEmployee(){
         function (err, res) {
           if (err) throw err;
           console.table(res);
+          promptUser();
     
         }
       );
     });
 }
-
+//function to add roles into db
 function addRole(){
     inquirer
     .prompt(
@@ -183,11 +189,12 @@ function addRole(){
             function (err, res) {
               if (err) throw err;
               console.table(res);
+              promptUser();
             }
         );
     });
 }
-
+//adds a new department to db
 function addDept(){
     inquirer
     .prompt([
@@ -206,6 +213,7 @@ function addDept(){
         function (err, res) {
           if (err) throw err;
           console.table(res);
+          promptUser();
         }
       );
     });
