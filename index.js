@@ -46,17 +46,14 @@ inquirer
         switch(ans.res){
             case "View All Employees":
             showEmployees();
-            promptUser();
             break;
 
             case "View All Departments":
             byDept();
-            promptUser();
             break;
 
             case "View All Roles":
             byRole();
-            promptUser();
             break;
 
             case "Add Employee":
@@ -89,6 +86,7 @@ function showEmployees(){
         if (err) throw err;
         console.log("=========================")
         console.table(res)
+        promptUser();
     })
 
 
@@ -96,20 +94,22 @@ function showEmployees(){
 //shows name of all departments
 function byDept(){
     connection.query(
-        "SELECT department.name, employee.first_name, employee.last_name, employee.role_id FROM employee INNER JOIN department ON department.id = employee.id INNER JOIN role ON role.id = employee.id",
+        "SELECT * FROM department",
         function (err, res) {
           if (err) throw err;
           console.table(res);
+          promptUser();
         }
       );
 }
 //shows employees by role
 function byRole(){
     connection.query(
-        " ",
+        "SELECT * FROM role",
         function (err, res) {
           if (err) throw err;
           console.table(res);
+          promptUser();
         }
       );
 }
@@ -219,5 +219,54 @@ function addDept(){
 }
 //updates employee information
 function upEmployee(){
+  connection.query("SELECT employee.last_name, role.title FROM employee JOIN role ON employee.role_id = role.id;",
+    function (err, res) {
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "updateEmp",
+            choices: function () {
+              //returns a list of names to select from
+              var lName = [];
+              for (var i = 0; i < res.length; i++) {
+                lName.push(res[i].last_name);
+              }
+              return lName;
+            },
+            message:
+              "Select employee(by last name) that you'd like to update.",
+          },
 
-}
+          {
+            type: "list",
+            message: "New role: ",
+            name: "updateRole",
+            choices: function () {
+              //returns a list of roles to select from
+              var roleList = [];
+              for (var i = 0; i < res.length; i++) {
+                roleList.push(res[i].title);
+                if (err) throw err;
+              }
+              return roleList;
+            },
+          },
+        ])
+        .then(function (answer) {
+          connection.query(
+            //updates new employee information
+            "UPDATE employee SET ? WHERE ?",
+            [{
+            last_name: answer.updateEmp,
+            },
+            {
+             role_id: answer.role_id,
+            }],
+            function (err, res) {
+              if (err) throw err;
+              promptUser();
+            });
+        });
+    });
+  }
