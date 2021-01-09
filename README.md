@@ -1,6 +1,7 @@
 
 <h1 align="center">Employee Management</h1>
-  
+Console based application that manages employees using mySQL
+<a href="https://drive.google.com/file/d/1SON6fkYQmVzKUOYFKIvwn7bu4JF-nTH9/view?usp=sharing">Click here to view</a>  
 ![badge](https://img.shields.io/badge/license-MIT-brightgreen)<br />
 ## Description
 🔍 
